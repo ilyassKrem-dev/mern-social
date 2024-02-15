@@ -188,6 +188,7 @@ const config: Config = {
         "light-3": "#7878A3",
         "light-4": "#5C5C7B",
         "gray-1": "#697C89",
+        accent: '#F13024',
         glassmorphism: "rgba(16, 16, 18, 0.60)",
       },
       boxShadow: {
