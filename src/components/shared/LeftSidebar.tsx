@@ -26,7 +26,7 @@ export default function LeftSidebar() {
             </div>
             <div className="mt-10 px-6">
                 <SignedIn>
-                    <SignOutButton signOutCallback={() => router.push('/')}>
+                    <SignOutButton signOutCallback={() => router.push('/sign-in')}>
                         <div className=" cursor-pointer flex gap-4 p-4 items-center group">
                             <RiLogoutBoxLine className="text-white text-heading2-semibold group-hover:text-accent transition-all duration-300"/>
                             <p className="text-light-2 max-lg:hidden group-hover:text-accent transition-all duration-300 cursor-pointer">Logout</p>
