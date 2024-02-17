@@ -20,6 +20,8 @@ import {ChangeEvent, useState} from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { isBase64Image } from "@/lib/utils"
 import { useUploadThing } from "@/lib/uploadthing"
+import { updateUser } from "@/lib/actions/user.action"
+import { usePathname , useRouter} from "next/navigation"
 interface props {
     user: {
         id:string,
@@ -35,7 +37,8 @@ interface props {
 export default function AccountProfile({user,btnTitle}:props) {
     const [files,setFiles] = useState<File[]>([])
     const {startUpload} = useUploadThing("media");
-
+    const router = useRouter();
+    const pathname = usePathname();
     const form = useForm({
         resolver: zodResolver(userValidation),
         defaultValues:{
@@ -72,12 +75,29 @@ export default function AccountProfile({user,btnTitle}:props) {
 
     async function onSubmit(values: z.infer<typeof userValidation>) {
         const blob = values.profile_photo;
-        const hasImageChaged = isBase64Image(blob)
-        if (hasImageChaged) {
+        const hasImageChanged = isBase64Image(blob)
+        if (hasImageChanged) {
             const imgRes = await startUpload(files)
             if (imgRes&& imgRes[0].url) {
                 values.profile_photo = imgRes[0].url
             }
+        }
+
+        await updateUser(
+            {
+                userId:user.id,
+                username:values.username,
+                name:values.name,
+                bio:values.bio,
+                image:values.profile_photo,
+                path:pathname, 
+            }
+        )
+       
+        if(pathname === "/profile/edit") {
+            router.back()
+        } else {
+            router.push('/')
         }
       }
     return (
@@ -111,7 +131,7 @@ export default function AccountProfile({user,btnTitle}:props) {
                                 className="account-form_image-input"
                                 onChange={(e) => handleImage(e,field.onChange) } />
                         </FormControl>
-                       
+                       <FormMessage />
                         
                     </FormItem>
                 )}
@@ -130,7 +150,7 @@ export default function AccountProfile({user,btnTitle}:props) {
                                 className="account-form_input no-focus"
                                 {...field} />
                         </FormControl>
-                       
+                        <FormMessage />
                         
                     </FormItem>
                 )}
@@ -149,7 +169,7 @@ export default function AccountProfile({user,btnTitle}:props) {
                                 className="account-form_input no-focus"
                                 {...field} />
                         </FormControl>
-                       
+                        <FormMessage />
                         
                     </FormItem>
                 )}
@@ -169,7 +189,7 @@ export default function AccountProfile({user,btnTitle}:props) {
                                 className="account-form_input no-focus resize-none"
                                 {...field} />
                         </FormControl>
-                       
+                        <FormMessage />
                         
                     </FormItem> 
                 )}
