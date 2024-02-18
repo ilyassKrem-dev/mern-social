@@ -9,7 +9,13 @@ export default function Topbar() {
     return (
         <nav className="topbar">
             <Link href={"/"} className="flex items-center gap-4">
-                <Image priority src={"logos/logo.svg"} alt="logo" width={50} height={50}/>
+                <Image 
+                priority 
+                src={"/logos/logo.svg"} 
+                alt="logo" 
+                width={50} 
+                height={50}
+                />
                 <p className="text-heading3-bold text-light-1 max-xs:hidden">Socials</p>
             </Link>
 
