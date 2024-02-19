@@ -1,9 +1,9 @@
 "use server"
 
 import { revalidatePath } from "next/cache";
-import User from "../modules/user.module";
+import User from "../models/user.model";
 import { connectDB } from "../mongoose"
-import Thread from "../modules/thread.module";
+import Thread from "../models/thread.model";
 import mongoose, { FilterQuery, SortOrder } from "mongoose";
 interface Params {
     userId:string,
@@ -113,7 +113,7 @@ export async function fetchUsers({
         const sortOptions = {
             createdAt: sortBy
         }
-        const usersQuery = User.find({query})
+        const usersQuery = User.find(query)
             .sort(sortOptions)
             .skip(skipAmount)
             .limit(pageSize)

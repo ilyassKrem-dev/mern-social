@@ -1,8 +1,8 @@
 "use server"
 
 import { connectDB } from "../mongoose"
-import Thread from "../modules/thread.module"
-import User from "../modules/user.module"
+import Thread from "../models/thread.model"
+import User from "../models/user.model"
 import { revalidatePath } from "next/cache"
 
 
