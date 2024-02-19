@@ -5,7 +5,8 @@ interface Props {
     name:string,
     username:string,
     imgUrl:string,
-    bio:string
+    bio:string,
+    type?:"User" |'Community'
 }
 
 export default function ProfileHeader({
@@ -14,7 +15,8 @@ export default function ProfileHeader({
     name,
     username,
     imgUrl,
-    bio
+    bio,
+    type
 }:Props) {
 
 

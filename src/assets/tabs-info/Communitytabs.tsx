@@ -1,5 +1,8 @@
+import { FaRegCommentDots } from "react-icons/fa";
+import { IoPeopleOutline,IoPersonAddOutline  } from "react-icons/io5";
+
 export const communityTabs = [
-    { value: "threads", label: "Threads", icon: "/assets/reply.svg" },
-    { value: "members", label: "Members", icon: "/assets/members.svg" },
-    { value: "requests", label: "Requests", icon: "/assets/request.svg" },
+    { value: "threads", label: "Threads", icon: <FaRegCommentDots/> },
+    { value: "members", label: "Members", icon: <IoPeopleOutline/> },
+    { value: "requests", label: "Requests", icon: <IoPersonAddOutline/> },
   ];

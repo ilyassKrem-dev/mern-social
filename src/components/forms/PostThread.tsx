@@ -9,6 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { useOrganization } from "@clerk/nextjs"
 import { z } from "zod"
 import { useForm } from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod"
@@ -24,6 +25,7 @@ export default function PostThread({userId}:{userId:string}) {
     
     const router = useRouter();
     const pathname = usePathname();
+    const {organization} = useOrganization()
     const form = useForm({
         resolver: zodResolver(threadValidation),
         defaultValues:{
@@ -37,7 +39,7 @@ export default function PostThread({userId}:{userId:string}) {
        await createThread({
         text:values.thread,
         author:userId,
-        communityId:null,
+        communityId:organization ? organization.id:null,
         path:pathname
        })
 
