@@ -65,6 +65,7 @@ export default function Comment({
                         <FormControl className="border-none bg-transparent">
                             <Input
                                 type="text"
+                                autoComplete="off"
                                 placeholder="Comment..."
                                 className="no-focus text-light-1 outline-none"
                                 {...field} />

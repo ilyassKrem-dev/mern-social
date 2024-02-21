@@ -15,6 +15,13 @@ const threadShema = new mongoose.Schema({
     type: Date,
     default: Date.now
    },
+   likedBy:[
+      {
+         type:mongoose.Schema.Types.ObjectId,
+         ref: "User",
+         index:true
+      }
+   ],
    parentId:{
     type: String
    },

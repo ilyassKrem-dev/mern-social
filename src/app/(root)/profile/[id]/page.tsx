@@ -19,7 +19,7 @@ export default async function Page({params}:{params:{id:string}}) {
         accountId: userInfo.id,
         accountType: "User",
     });
-
+    
     return (
             <section>
                 <ProfileHeader

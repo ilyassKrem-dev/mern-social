@@ -1,26 +1,42 @@
+
 import ThreadCard from "@/components/cards/ThreadCard"
-import { fetchThredById } from "@/lib/actions/thread.action";
+import { fetchThreadById, threadLikedByUser } from "@/lib/actions/thread.action";
 import { fetchUser } from "@/lib/actions/user.action";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Comment from "@/components/forms/Comment";
+
 const Page =  async ({params}:{params:{id:string}}) => {
         if(!params.id) return null;
 
         const user = await currentUser();
         if(!user) return null
-
+        
         const userInfo = await fetchUser(user.id)
         if(!userInfo?.onboarded) redirect('/onboarding')
 
-        const thread = await fetchThredById(params.id)
-
+        const thread = await fetchThreadById(params.id)
+        
+        const checkLike = await threadLikedByUser(thread._id,user?.id)
+        
+        const checkLikefunc = async (threadId:string) => {
+            try {
+              if(user) return await threadLikedByUser(threadId,user?.id)
+            } catch (error:any) {
+                throw new Error(`Failed checking: ${error.message}`)
+            }
+          }
+          const checkLikePromises = thread.children.map((childItem:any) => checkLikefunc(childItem._id));
+          const likes = await Promise.all(checkLikePromises);
+          
         return (    
             <section className="relative">
                 <div>
                     <ThreadCard 
                     key={thread._id} 
                     id={thread._id}
+                    checkLike={checkLike}
+                    likes={thread.likedBy.length}
                     currentUserId={user?.id || ""}
                     parentId={thread.parentId}
                     content={thread.text}
@@ -37,12 +53,14 @@ const Page =  async ({params}:{params:{id:string}}) => {
                 </div>
 
                 <div className="mt-10">
-                    {thread.children.map((childItem:any) => {
-
+                    {thread.children.map((childItem:any,index:any) => {
+                        
                         return (
                             <ThreadCard 
                             key={childItem._id} 
                             id={childItem._id}
+                            checkLike={likes[index]}
+                            likes={childItem.likedBy.length}
                             currentUserId={user?.id || ""}
                             parentId={childItem.parentId}
                             content={childItem.text}

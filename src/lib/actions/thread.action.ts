@@ -7,7 +7,7 @@ import { connectDB } from "../mongoose";
 import User from "../models/user.model";
 import Thread from "../models/thread.model";
 import Community from "../models/community.model";
-
+import mongoose from "mongoose";
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   connectDB();
 
@@ -237,4 +237,44 @@ export async function addCommentToThread(
     console.error("Error while adding comment:", err);
     throw new Error("Unable to add comment");
   }
+}
+
+export async function likeThread(threadId:string,userId:string,path:string) {
+    const newThreadId = new mongoose.Types.ObjectId(threadId)
+  
+    try {
+      connectDB()
+      
+      const user = await User.findOne({id:userId})
+      const thread = await Thread.findById(newThreadId)
+
+      const index = thread.likedBy.indexOf(user._id);
+      if (index === -1) {
+        
+        thread.likedBy.push(user._id);
+      } else {
+       
+        thread.likedBy.splice(index, 1);
+      }
+
+
+      await thread.save();
+
+      revalidatePath(path)
+      
+    } catch (error:any) {
+        throw new Error(`Failed to change state of like: ${error.message}`)
+    }
+}
+
+export async function threadLikedByUser(threadId:string,userId:string) {
+    try {
+      connectDB()
+      const user = await User.findOne({id:userId})
+      const thread = await Thread.findById(threadId)
+      
+      return thread.likedBy.indexOf(user._id) >= 0;
+    } catch (error:any) {
+      throw new Error(`Failed to change state of like: ${error.message}`)
+    }
 }
