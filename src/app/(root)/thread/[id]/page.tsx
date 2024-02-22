@@ -7,28 +7,28 @@ import { redirect } from "next/navigation";
 import Comment from "@/components/forms/Comment";
 
 const Page =  async ({params}:{params:{id:string}}) => {
-        if(!params.id) return null;
+        if (!params.id) return null;
 
         const user = await currentUser();
-        if(!user) return null
-        
-        const userInfo = await fetchUser(user.id)
-        if(!userInfo?.onboarded) redirect('/onboarding')
 
-        const thread = await fetchThreadById(params.id)
-        
-        const checkLike = await threadLikedByUser(thread._id,user?.id)
-        
-        const checkLikefunc = async (threadId:string) => {
+        const userInfo = user ? await fetchUser(user.id) : null;
+        if (userInfo && !userInfo.onboarded) redirect('/onboarding');
+
+        const thread = await fetchThreadById(params.id);
+
+        const checkLike = user ? await threadLikedByUser(thread._id, user.id) : false;
+
+        const checkLikefunc = async (threadId: string) => {
             try {
-              if(user) return await threadLikedByUser(threadId,user?.id)
-            } catch (error:any) {
-                throw new Error(`Failed checking: ${error.message}`)
+                if (user) return await threadLikedByUser(threadId, user.id);
+            } catch (error: any) {
+                throw new Error(`Failed checking: ${error.message}`);
             }
-          }
-          const checkLikePromises = thread.children.map((childItem:any) => checkLikefunc(childItem._id));
-          const likes = await Promise.all(checkLikePromises);
-          
+        };
+        const checkLikePromises = thread.children.map((childItem: any) => checkLikefunc(childItem._id));
+        
+        const likes = user ? await Promise.all(checkLikePromises) : [];
+        
         return (    
             <section className="relative">
                 <div>
@@ -46,13 +46,13 @@ const Page =  async ({params}:{params:{id:string}}) => {
                     comments={thread.children}/>
                 </div>
                 <div className="mt-7">
-                    <Comment
+                    {user&&<Comment
                         threadId={thread.id}
                         currentUserImg={userInfo.image || user.imageUrl}
-                        currentUserId={JSON.stringify(userInfo._id)} />
+                        currentUserId={JSON.stringify(userInfo._id)} />}
                 </div>
 
-                <div className="mt-10">
+                <div className="mt-10 flex flex-col gap-2">
                     {thread.children.map((childItem:any,index:any) => {
                         
                         return (

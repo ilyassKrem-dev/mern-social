@@ -1,7 +1,7 @@
 "use client"
 import { sidebarLinks } from "@/assets/tabs-info/Sidebarlinks"
-import { SignOutButton,SignedIn,useAuth } from "@clerk/nextjs"
-import { RiLogoutBoxLine } from "react-icons/ri";
+import { SignOutButton,SignedIn,useAuth,SignedOut,SignInButton } from "@clerk/nextjs"
+import { RiLogoutBoxLine,RiLoginBoxLine  } from "react-icons/ri";
 import Link from "next/link"
 import { usePathname , useRouter } from "next/navigation"
 export default function LeftSidebar() {
@@ -35,6 +35,15 @@ export default function LeftSidebar() {
 
                     </SignOutButton>
                 </SignedIn>
+                <SignedOut>
+                    <SignInButton mode="redirect" redirectUrl={'/sign-in'}>
+                            <div className=" cursor-pointer flex gap-4 p-4 items-center group">
+                                <RiLoginBoxLine className="text-white text-heading2-semibold group-hover:text-accent transition-all duration-300"/>
+                                <p className="text-light-2 max-lg:hidden group-hover:text-accent transition-all duration-300 cursor-pointer">Login</p>
+                            </div>
+
+                        </SignInButton>
+                </SignedOut>
             </div>
         </section>
     )

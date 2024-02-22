@@ -1,7 +1,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { RiHeartLine, RiReplyLine, RiShareLine } from "react-icons/ri";
+import {RiReplyLine, RiShareLine } from "react-icons/ri";
 import { FaRegCommentDots } from "react-icons/fa";
 import { formatDateString } from "@/lib/utils";
 import LikeButton from "@/assets/other/LikeButton";
@@ -44,11 +44,15 @@ const ThreadCard =  ({
   comments,
   isComment,
 }: Props) => {
+  const mentionRegex = /@(\w+)/g;
+  const processedContent = content.replace(mentionRegex, (match, username) => (
+    `<a href="/profile/${author.id}" style="color:cyan;text-decoration:underline;">@${username}</a>`
+  ));
   
   return (
     <article
       className={`flex w-full flex-col rounded-xl  ${
-        isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
+        isComment ? "px-0 xs:px-7 bg-dark-2/10 py-4" : "bg-dark-2 p-7"
       }`}
     >
       <div className="flex items-start justify-between">
@@ -74,9 +78,9 @@ const ThreadCard =  ({
               </h4>
             </Link>
 
-            <p className="mt-2 text-small-regular text-light-2">{content}</p>
+            <p className="mt-2 text-small-regular text-light-2" dangerouslySetInnerHTML={{ __html: processedContent }}/>
 
-            <div className={`mt-5 flex flex-col gap-3 ${isComment && "mb-10"}`}>
+            <div className={`mt-5 flex flex-col gap-3 ${isComment && "mb-1"}`}>
               <div className="flex gap-3.5">
                 <div className="flex flex-col gap-1 items-center">
                   <LikeButton 
@@ -108,23 +112,38 @@ const ThreadCard =  ({
                 <RiReplyLine className=" text-gray-600 text-heading3-bold cursor-pointer rotate-180 hover:text-green-500 transition-all duration-300" />
                 <RiShareLine className=" text-gray-600 text-heading3-bold cursor-pointer hover:text-purple-500 transition-all duration-300" />
               </div>
-
-              {isComment && comments.length > 0 && (
-                <Link href={`/thread/${id}`}>
-                  <p className="mt-1 text-subtle-medium text-gray-1 cursor-pointer">
-                    {comments.length} replies
-                  </p>
-                </Link>
-              )}
+              
+              
             </div>
           </div>
         </div>
-
         {/*Delete thread */}
-        {/*Show comments logos */}
-
-            
       </div>
+        {comments.length > 0 && (
+          <div className='ml-1 mt-3 flex items-center gap-2 cursor-pointer'>
+            {comments.slice(0, 2).map((comment, index) => (
+              <Image
+                key={index}
+                src={comment.author.image}
+                alt={`user_${index}`}
+                width={24}
+                height={24}
+                className={`${index !== 0 && "-ml-5"} rounded-full object-cover`}
+              />
+            ))}
+
+            <Link href={`/thread/${id}`}>
+              <p className='mt-1 text-subtle-medium text-gray-1 cursor-pointer'>
+                {comments.length} repl{comments.length > 1 ? "ies" : "y"}
+              </p>
+            </Link>
+          </div>
+        )}
+        {!community && (
+          <p className="text-subtle-medium text-gray-1 cursor-pointer mt-5">
+          {formatDateString(createdAt)}
+          </p>
+        )}
         {!isComment && community && (
             <Link href={`/communities/${community.id}`} className="mt-5 flex items-center">
                 <p className="text-subtle-medium text-gray-1 cursor-pointer">

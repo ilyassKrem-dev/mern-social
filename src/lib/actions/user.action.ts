@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { connectDB } from "../mongoose"
 
 import mongoose, { FilterQuery, SortOrder } from "mongoose";
+
 interface Params {
     userId:string,
     username:string,
@@ -145,12 +146,13 @@ export async function getActivity(userId:string) {
         connectDB();
         const userThreads = await Thread.find({author:userId})
         
+        
         const childThreadIds:mongoose.Types.ObjectId[] = userThreads.reduce((acc,userThread) => {
             return acc.concat(userThread.children)
         } , [])
         const replies = await Thread.find({
             _id:{$in: childThreadIds},
-            authot:{$ne:userId}
+            author:{$ne:userId}
         }).populate({
             path:'author',
             model:User,
@@ -162,4 +164,84 @@ export async function getActivity(userId:string) {
          throw new Error(`Error fetching activity: ${error.message}`)
     }
 
+}
+
+export async function getTaggedPosts(userId:string) {
+    try {
+        connectDB()
+        const user = await User.findOne({id:userId})
+        const threads = await Thread.find({
+            text: { $regex: `@${user.username}` },
+            author: { $ne: user._id } 
+        })
+        .populate({
+            path: 'community',
+            model: Community,
+            select: 'name id image _id'
+        })
+        .populate({
+            path: 'author',
+            model: User,
+            select: 'name image id'
+        })
+        .populate({
+            path: 'children',
+            model: Thread,
+            populate: {
+            path: 'author',
+            model: User,
+            select: 'name image id'
+            }
+        });
+        
+        return {threads}
+    } catch (error:any) {
+        throw new Error(`Failes fetching:${error.message}`)
+    }
+
+}
+
+export async function getThreadsRepliedto(userId:string) {
+    try {
+        connectDB()
+        const user = await User.findOne({id:userId})
+
+        const threadsSearch = await Thread.find({ parentId: { $exists: true }, author: user._id })
+
+        const parentIds = threadsSearch.map(thread => thread.parentId); 
+
+        const parentObjectIds = parentIds.map(id => {
+            const newId = new mongoose.Types.ObjectId(id)
+            return newId
+        });
+        
+        const threads = await Thread.find({
+            _id: { $in: parentObjectIds },
+            author: { $ne: user._id } 
+            })
+            .populate({
+            path: 'community',
+            model: Community,
+            select: 'name id image _id'
+            })
+            .populate({
+            path: 'author',
+            model: User,
+            select: 'name image id'
+            })
+            .populate({
+            path: 'children',
+            model: Thread,
+            populate: {
+                path: 'author',
+                model: User,
+                select: 'name image id'
+            }
+            })
+            
+    return {threads}
+    
+    } catch (error:any) {
+        throw new Error(`Failes fetching:${error.message}`)
+    }
 }
