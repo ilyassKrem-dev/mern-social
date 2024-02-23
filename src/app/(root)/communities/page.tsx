@@ -11,10 +11,7 @@ import SearchBar from "@/components/shared/SearchBar";
 export default async function Page({searchParams}:{
     searchParams:{[key:string]:string|undefined}
 }) {
-    const user = await currentUser()
-    if(!user) return null
-    const userInfo = await fetchUser(user.id)
-    if(!userInfo?.onboarded) redirect('/onboarding')
+    
     //fetching
     const result = await fetchCommunities({
         searchString:searchParams.q||'',

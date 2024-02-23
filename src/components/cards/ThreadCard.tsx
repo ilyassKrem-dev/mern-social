@@ -16,6 +16,7 @@ interface Props {
     name: string;
     image: string;
     id: string;
+    username?:string;
   };
   community: {
     name: string;
@@ -76,6 +77,7 @@ const ThreadCard =  ({
               <h4 className=" cursor-pointer text-base-semibold text-light-1">
                 {author.name}
               </h4>
+              <p className="text-gray-1 text-small-medium">@{author.username}</p>
             </Link>
 
             <p className="mt-2 text-small-regular text-light-2" dangerouslySetInnerHTML={{ __html: processedContent }}/>

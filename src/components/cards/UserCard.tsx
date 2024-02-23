@@ -7,7 +7,7 @@ interface Props {
     name:string;
     username:string;
     imgUrl:string;
-    personType:string;
+    personType?:string;
 }
 
 const UserCard = ({

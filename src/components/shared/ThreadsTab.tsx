@@ -1,5 +1,5 @@
 import { fetchCommunityPosts } from "@/lib/actions/community.actions"
-import { fetchUserPost,getTaggedPosts,getThreadsRepliedto} from "@/lib/actions/user.action"
+import { fetchUserPost,getTaggedPosts,getThreadsLikedto} from "@/lib/actions/user.action"
 import { redirect } from "next/navigation"
 import ThreadCard from "../cards/ThreadCard"
 import { threadLikedByUser } from "@/lib/actions/thread.action"
@@ -23,8 +23,8 @@ const ThreadsTab = async ({
     } else {
         if(tabType=="tagged") {
             result = await getTaggedPosts(accountId)
-        }else if (tabType=="replies") {
-            result = await getThreadsRepliedto(accountId)
+        }else if (tabType=="likes") {
+            result = await getThreadsLikedto(accountId)
         } else {
             result = await fetchUserPost(accountId)
 
@@ -55,13 +55,13 @@ const ThreadsTab = async ({
                     parentId={thread.parentId}
                     content={thread.text}
                     author={
-                        accountType === "User"&&tabType=="tagged" || tabType=="replies"
+                        accountType === "User"&&tabType=="tagged" || tabType=="likes"
                         ?
-                        {name:thread.author.name,image:thread.author.image,id:thread.author.id}
+                        {name:thread.author.name,image:thread.author.image,id:thread.author.id,username:thread.author.username}
                         :
                         accountType === "User"
                         ? 
-                        {name:result.name,image:result.image,id:result.id}
+                        {name:result.name,image:result.image,id:result.id,username:result.username}
                         :
                         {name:thread.author.name,image:thread.author.image,id:thread.author.id}
                     } 

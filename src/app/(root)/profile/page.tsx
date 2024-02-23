@@ -1,19 +1,24 @@
 import { fetchUser } from "@/lib/actions/user.action";
+import { currentUser } from "@clerk/nextjs";
+
+import { redirect } from "next/navigation";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import { profileTabs } from "@/assets/tabs-info/Profiletabs";
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page( ) {
+  const user = await currentUser();
+  if (!user) return null;
 
-  const userInfo = await fetchUser(params.id);
-  
+  const userInfo = await fetchUser(user.id);
+  if (!userInfo?.onboarded) redirect("/onboarding");
   
   
   return (
     <section>
       <ProfileHeader
         accountId={userInfo.id}
-        
+        authUserId={user.id}
         name={userInfo.name}
         username={userInfo.username}
         imgUrl={userInfo.image}
@@ -48,7 +53,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 {/*typeScript warning ignore */}
                 <ThreadsTab
-                  currentUserId={params.id}
+                  currentUserId={user.id}
                   accountId={userInfo.id}
                   accountType= "User"
                   tabType={tab.value}

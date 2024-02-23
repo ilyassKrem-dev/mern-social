@@ -7,13 +7,13 @@ import { usePathname , useRouter } from "next/navigation"
 export default function LeftSidebar() {
     const router = useRouter()
     const pathname = usePathname()
-    const {userId} = useAuth()
+    
     return (
         <section className="custom-scrollbar leftsidebar">
             <div className="flex w-full flex-1 flex-col gap-6 px-6">
                 {sidebarLinks.map(link => {
                     const isActive = (pathname.includes(link.route) && link.route.length > 1) || pathname === link.route;
-                    if(link.route === "/profile") link.route = `${link.route}/${userId}`
+                   
                     return (
                         <Link href={link.route} key={link.label} className={`leftsidebar_link items-center  ${isActive && "bg-accent"} hover:opacity-60 transition-all duration-300`}>
                             <div className={`text-white text-heading4-medium`}>

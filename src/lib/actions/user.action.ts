@@ -91,13 +91,11 @@ export async function fetchUserPost(userId:string) {
 }
 
 export async function fetchUsers({
-    userId,
     searchString = "",
     pageNumber = 1,
     pageSize = 20,
     sortBy = "desc"
 }:{
-    userId:string;
     searchString?:string;
     pageNumber?:number;
     pageSize?:number;
@@ -110,9 +108,7 @@ export async function fetchUsers({
 
         const regex = new RegExp(searchString,"i")
 
-        const query: FilterQuery<typeof User> = {
-            id:{$ne:userId}
-        }
+        const query: FilterQuery<typeof User> = {}
         if(searchString.trim() !== '' ) {
             query.$or = [
                 {username:{ $regex:regex}},
@@ -201,47 +197,52 @@ export async function getTaggedPosts(userId:string) {
 
 }
 
-export async function getThreadsRepliedto(userId:string) {
+export async function getThreadsLikedto(userId:string) {
     try {
         connectDB()
         const user = await User.findOne({id:userId})
-
-        const threadsSearch = await Thread.find({ parentId: { $exists: true }, author: user._id })
-
-        const parentIds = threadsSearch.map(thread => thread.parentId); 
-
-        const parentObjectIds = parentIds.map(id => {
-            const newId = new mongoose.Types.ObjectId(id)
-            return newId
-        });
-        
         const threads = await Thread.find({
-            _id: { $in: parentObjectIds },
-            author: { $ne: user._id } 
+            likedBy:{$in:user._id},
+            author:{$ne:user._id}
+        })
+            .populate({
+                path:'author',
+                model:User,
+                select:"name image id username"
             })
             .populate({
-            path: 'community',
-            model: Community,
-            select: 'name id image _id'
+                path:'community',
+                model:Community,
+                select:'name id image _id'
             })
             .populate({
-            path: 'author',
-            model: User,
-            select: 'name image id'
-            })
-            .populate({
-            path: 'children',
-            model: Thread,
-            populate: {
-                path: 'author',
-                model: User,
-                select: 'name image id'
-            }
-            })
+                path: 'children',
+                model: Thread,
+                populate: {
+                    path: 'author',
+                    model: User,
+                    select: 'name image id username'
+                }
+                })
             
     return {threads}
     
     } catch (error:any) {
         throw new Error(`Failes fetching:${error.message}`)
+    }
+}
+
+export async function fetchSuggetedUsers() {
+    try {
+        connectDB()
+        const allusers = await User.find({})
+        const numberOfUsers = 3
+        const shuffleUsers = allusers.sort(() => Math.random()-0.5)
+
+        const user = shuffleUsers.slice(0,numberOfUsers)
+
+        return user
+    } catch (error:any) {
+        throw new Error(`Failed to fetch seggested users: ${error.message}`)
     }
 }
