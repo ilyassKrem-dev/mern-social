@@ -30,7 +30,7 @@ interface props {
         bio:string,
         image:string,
     };
-    btnTitle:string
+    btnTitle?:string
 }
 
 export default function AccountProfile({user,btnTitle}:props) {
@@ -193,7 +193,7 @@ export default function AccountProfile({user,btnTitle}:props) {
                     </FormItem> 
                 )}
                 />
-                <Button type="submit" className="bg-accent">Submit</Button>
+                <Button type="submit" className="bg-accent">{btnTitle==="Update" ? "Update" : "Submit"}</Button>
             </form>
         </Form>
     )

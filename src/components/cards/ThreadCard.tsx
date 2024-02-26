@@ -5,6 +5,7 @@ import {RiReplyLine, RiShareLine } from "react-icons/ri";
 import { FaRegCommentDots } from "react-icons/fa";
 import { formatDateString } from "@/lib/utils";
 import LikeButton from "@/assets/other/LikeButton";
+import DeleteThread from "@/assets/other/DeleteThread";
 interface Props {
   id: string;
   currentUserId: string;
@@ -119,7 +120,12 @@ const ThreadCard =  ({
             </div>
           </div>
         </div>
-        {/*Delete thread */}
+        <DeleteThread 
+        threadId={id.toString()}
+        currentUserId={currentUserId}
+        author={author.id}
+        parentId={parentId}
+        isComment={isComment}/>
       </div>
         {comments.length > 0 && (
           <div className='ml-1 mt-3 flex items-center gap-2 cursor-pointer'>

@@ -1,45 +1,60 @@
 "use client"
-import { fetchSuggetedUsers } from "@/lib/actions/user.action"
+import { fetchSuggestedUsers } from "@/lib/actions/user.action"
+import { fetchSuggestedCommuntity } from "@/lib/actions/community.actions"
 import { useEffect, useState } from "react"
 import UserCard from "../cards/UserCard"
-
-export default  function RightSidebar() {
-    const [userResults,setUserResults] = useState<any[]>([])
-    const fetchUsers = async () => {
+import CommunityCard from "../cards/CommunityCard"
+export default  function  RightSidebar() {
+    const [usersResults,setUsersResults] = useState<any[]>([])
+    const [communitiesResults,setCommunitiesResults] = useState<any[]>([])
+    const fetchUsersAndCommunities = async () => {
         try {
-            const usersData = await fetchSuggetedUsers();
-            // Ensure each user object is converted to plain JavaScript object
-            const plainUsers = usersData.map(user => {
-                // Check if user object has toJSON method, if yes, convert to plain object
-                if (user && typeof user.toJSON === 'function') {
-                    return user.toJSON();
-                }
-                return user;
-            });
-            setUserResults(plainUsers);
-        } catch (error) {
-            console.error("Error fetching suggested users:", error);
+            const usersData = await fetchSuggestedUsers();
+            const communitiesData = await fetchSuggestedCommuntity()
+            setUsersResults(usersData);
+            setCommunitiesResults(communitiesData)
+           
+        } catch (error:any) {
+            throw new Error(`Failed to fetch:${error.message}`)
         }
     };
 
     useEffect(() => {
-        fetchUsers()
+        
+        fetchUsersAndCommunities()
 
-        const interval = setInterval(fetchUsers, 3 * 60 * 60 * 1000);
+        const interval = setInterval(fetchUsersAndCommunities, 3 * 60 * 60 * 1000);
 
         return () => clearInterval(interval)
     },[])
-
-
+    
+    
     return (
         <section className="custom-scrollbar rightsidebar">
-            <div className="flex flex-1 flex-col justify-start">
+            <div className="flex flex-1 flex-col justify-start gap-3">
                 <h3 className=" text-heading4-medium text-light-1">Suggested Communities</h3>
+                <div className="flex flex-col gap-y-6 mt-5">
+                    {communitiesResults.map(community => {
+                        return (
+                            <CommunityCard
+                            key={community.id}
+                            id={community.id}
+                            name={community.name}
+                            username={community.username}
+                            imgUrl={community.image}
+                            bio={community.bio}
+                            members={community.members}
+                            suggest="bar"
+                            />
+                        )
+                    })}
 
-            </div><div className="flex flex-1 flex-col justify-start gap-3">
+                </div>
+            </div>
+            <div className="flex flex-1 flex-col justify-start gap-3">
                 <h3 className=" text-heading4-medium text-light-1">Suggested Users</h3>
                 <div className="flex flex-col gap-y-6 mt-5">
-                    {userResults.map((result) => {
+                    {usersResults.map((result) => {
                         return (
                             <UserCard
                                 key={result.id}

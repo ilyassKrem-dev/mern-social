@@ -1,4 +1,7 @@
 import Image from "next/image"
+
+import Settings from "@/assets/other/Settings";
+
 interface Props {
     accountId:string,
     authUserId?:string,
@@ -39,7 +42,7 @@ export default function ProfileHeader({
                         <p className=" text-base-medium text-gray-1">@{username}</p>
                     </div>
                 </div>
-      
+                <Settings />
             </div>
             {/*Community*/ } 
             <p className="mt-6 max-w-lg text-base-regular text-light-2">{bio}</p>

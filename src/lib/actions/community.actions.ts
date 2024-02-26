@@ -302,3 +302,25 @@ export async function deleteCommunity(communityId: string) {
     throw error;
   }
 }
+
+export async function fetchSuggestedCommuntity() {
+  try {
+    connectDB()
+    const allCommunity = await Community.find({})
+        .select('-_id id name username image bio members')
+        .populate({
+          path:"members",
+          model:User,
+          select:'-_id image'
+        }).lean()
+        
+        const numbersShuffled = 2
+        const communityShuffled = allCommunity.sort(() => Math.random()-0.5)
+        const community = communityShuffled.slice(0,numbersShuffled)
+        
+      return community
+  } catch (error:any) {
+      throw new Error(`Failed to fetch: ${error.message}`)
+  }
+
+}

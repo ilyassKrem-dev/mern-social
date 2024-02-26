@@ -178,7 +178,7 @@ export async function getTaggedPosts(userId:string) {
         .populate({
             path: 'author',
             model: User,
-            select: 'name image id'
+            select: 'name image id username'
         })
         .populate({
             path: 'children',
@@ -232,13 +232,14 @@ export async function getThreadsLikedto(userId:string) {
     }
 }
 
-export async function fetchSuggetedUsers() {
+export async function fetchSuggestedUsers() {
     try {
         connectDB()
         const allusers = await User.find({})
+            .select('-_id id name username image').lean();
         const numberOfUsers = 3
         const shuffleUsers = allusers.sort(() => Math.random()-0.5)
-
+        
         const user = shuffleUsers.slice(0,numberOfUsers)
 
         return user

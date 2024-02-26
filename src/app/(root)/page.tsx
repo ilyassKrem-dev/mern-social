@@ -2,7 +2,7 @@
 import ThreadCard from "@/components/cards/ThreadCard";
 import { fetchPosts,threadLikedByUser } from "@/lib/actions/thread.action";
 import { currentUser } from "@clerk/nextjs";
-
+import { fetchSuggestedCommuntity } from "@/lib/actions/community.actions";
 export default async function Home() {
   const results = await fetchPosts(1,30);
   const user = await currentUser()
@@ -15,6 +15,8 @@ export default async function Home() {
   }
   const checkLikePromises = results.posts.map((post) => checkLike(post._id));
   const likes = await Promise.all(checkLikePromises);
+
+  
   return (
     <div >
         <h1 className="head-text text-left">Home</h1>
