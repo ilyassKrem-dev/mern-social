@@ -66,7 +66,7 @@ export default function Settings({authUserId}:{authUserId:string}) {
       
     const handleDelete = async () => {
       try {
-        const response = await fetch("https://mern-social-beta.vercel.app/api/webhook/clerk",{
+        const response = await fetch('https://mern-social-beta.vercel.app/api/webhook/clerk',{
           method:"POST",
           headers:{
             'Content-Type':'application/json'
@@ -81,11 +81,11 @@ export default function Settings({authUserId}:{authUserId:string}) {
         if(!response.ok) {
           throw new Error('Failed to delete account')
         }
-        const resonseData = await response.json()
-        console.log('Response: ', resonseData)
+        const responseData = await response.json()
+        console.log('Response: ', responseData)
         router.push('/')
       } catch (error:any) {
-        throw new Error(`Failed to delete: ${error.message}`)
+        throw new Error(`Failed response: ${error.message}`)
       } 
     }
     

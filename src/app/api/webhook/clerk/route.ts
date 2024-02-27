@@ -29,15 +29,15 @@ type EventType =
   | "organization.deleted"
   | "user.deleted";
 
-type EventData = Record<string, string | number | Record<string, string>[]>;
 type Event = {
-  data: EventData;
+  data: Record<string, string | number | Record<string, string>[]>;
   object: "event";
   type: EventType;
 };
 
 export const POST = async (request: Request) => {
   const payload = await request.json();
+  console.log(payload)
   const header = headers();
 
   const heads = {
@@ -211,9 +211,7 @@ export const POST = async (request: Request) => {
     try {
       const { userId} = evnt?.data;
       console.log("deleted", evnt?.data);
-      
       const stringUserId = typeof userId === 'string' ? userId : String(userId)
-
       await DeleteUser(stringUserId)
 
       return NextResponse.json(
