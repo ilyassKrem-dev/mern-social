@@ -4,8 +4,11 @@ import { IoMdSettings } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { useRouter } from "next/navigation";
+import { DeleteUser } from "@/lib/actions/user.action";
+import { clerkClient } from "@clerk/nextjs";
+import { AnyAaaaRecord } from "dns";
 
-export default function Settings() {
+export default function Settings({authUserId}:{authUserId:string}) {
     const [show,setShow] = useState<boolean>(false)
     const router = useRouter()
     useEffect(() => {
@@ -23,8 +26,7 @@ export default function Settings() {
           document.body.removeEventListener("click", handleOutsideClick);
         };
     }, []);
-    
-
+  
     useEffect(() => {
         const handleBodyClick = (event:any) => {
           if (show && !event.target.closest('.modal-container')) {
@@ -63,6 +65,27 @@ export default function Settings() {
           window.removeEventListener('resize', handleWindowResize);
         };
       }, [show]);
+      
+    const handleDelete = async () => {
+      try {
+        const response = await fetch("https://mern-social-beta.vercel.app/api/webhook/clerk",{
+          method:"POST",
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({authUserId})
+        })
+        if(!response.ok) {
+          throw new Error('Failed to delete account')
+        }
+        const resonseData = await response.json()
+        console.log('Response: '+resonseData)
+        router.push('/')
+      } catch (error:any) {
+        throw new Error(`Failed to delete: ${error.message}`)
+      } 
+    }
+    
     return (
         <div className="relative">
             <IoMdSettings className={`text-white text-heading3-bold cursor-pointer hover:opacity-60 transition-all duration-300 ${show && "sm:hidden"}`} onClick={() => setShow(true)} />
@@ -73,7 +96,7 @@ export default function Settings() {
                         <CiEdit />
                         <p className=" cursor-pointer">Edit profile</p>
                     </div>
-                    <div className="text-accent cursor-pointer hover:opacity-60 transition-all duration-300 flex  items-center gap-x-4">
+                    <div className="text-accent cursor-pointer hover:opacity-60 transition-all duration-300 flex  items-center gap-x-4" onClick={handleDelete}>
                         <MdDeleteForever />  
                         <p className=" cursor-pointer">Delete account</p>
                     </div>

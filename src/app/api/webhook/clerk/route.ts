@@ -17,7 +17,7 @@ import {
   removeUserFromCommunity,
   updateCommunityInfo,
 } from "@/lib/actions/community.actions";
-
+import { DeleteUser } from "@/lib/actions/user.action";
 // Resource: https://clerk.com/docs/integration/webhooks#supported-events
 // Above document lists the supported events
 type EventType =
@@ -26,10 +26,12 @@ type EventType =
   | "organizationMembership.created"
   | "organizationMembership.deleted"
   | "organization.updated"
-  | "organization.deleted";
+  | "organization.deleted"
+  | "user.deleted";
 
+type EventData = Record<string, string | number | Record<string, string>[]>;
 type Event = {
-  data: Record<string, string | number | Record<string, string>[]>;
+  data: EventData;
   object: "event";
   type: EventType;
 };
@@ -203,6 +205,28 @@ export const POST = async (request: Request) => {
         { message: "Internal Server Error" },
         { status: 500 }
       );
+    }
+  }
+  if(eventType === "user.deleted") {
+    try {
+      const { userId} = evnt?.data;
+      console.log("deleted", evnt?.data);
+      
+      const stringUserId = typeof userId === 'string' ? userId : String(userId)
+
+      await DeleteUser(stringUserId)
+
+      return NextResponse.json(
+        {message:"User deleted"},
+        {status:201}
+      )
+    } catch (err) {
+      console.log(err)
+
+      return NextResponse.json(
+        { message: "Internal Server Error" },
+        { status: 500 }
+      ); 
     }
   }
 };

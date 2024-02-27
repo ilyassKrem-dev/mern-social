@@ -247,15 +247,6 @@ export async function fetchSuggestedUsers() {
         throw new Error(`Failed to fetch seggested users: ${error.message}`)
     }
 }
-export async function DeleteUser(userId:string) {
-    try {
-        const user = User.findOne({id:userId})
-        console.log(user)
-    } catch (error:any) {
-        throw new Error(`Failed to delete account: ${error.message}`)
-    }
-
-}
 
 export async function fetchUserByUsername(username:string) {
     try {
@@ -265,6 +256,52 @@ export async function fetchUserByUsername(username:string) {
         return user
     } catch (error:any) {
         throw new Error(`Failed to find id: ${error.message}`)
+    }
+
+}
+
+export async function DeleteUser(userId:string) {
+    try {
+        const user = await User.findOne({id:userId})
+        if(!user) return 
+
+        const threads = await Thread.find({ author: user._id })
+
+        const communities = await Community.find({ members: user._id });
+
+        await Promise.all(communities.map(async (community) => {
+            // Remove user from members list
+            community.members = community.members.filter((member:any) => member.toString() !== user._id.toString());
+            
+            // Remove user's threads from community's threads array
+            community.threads = community.threads.filter((thread:any)=> !user.threads.includes(thread.toString()));
+            
+            await community.save();
+        }));
+
+        const threadIds = threads.map(thread => thread._id);
+
+        //delte user Threads
+        await Thread.deleteMany({author:user._id})
+
+        //remove User likes
+        await Thread.updateMany(
+            {likedBy:user._id},
+            {$pull:{likedBy:user._id}}
+        )
+
+        // remove comments of user
+        await Thread.updateMany(
+            {children:{$in:threadIds}},
+            {$pull:{children:{$in:threadIds}}}
+        )
+
+        // delete user
+        const deletedUser = await User.findByIdAndDelete(user._id);
+        
+        return deletedUser
+    } catch (error:any) {
+        throw new Error(`Failed to delete account: ${error.message}`)
     }
 
 }

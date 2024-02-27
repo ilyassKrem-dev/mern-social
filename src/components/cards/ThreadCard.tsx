@@ -35,7 +35,7 @@ interface Props {
   isComment?: boolean;
 }
 
-const ThreadCard = async ({
+const ThreadCard =  ({
   id,
   currentUserId,
   checkLike,
@@ -48,33 +48,7 @@ const ThreadCard = async ({
   comments,
   isComment,
 }: Props) => {
-  
 
-  const parseContent = async (content) => {
-    const regex = /@(\w+)/g;
-    let parsedContent = content;
-    let match;
-
-    while ((match = regex.exec(content)) !== null) {
-      const username = match[1];
-      const user = await fetchUserByUsername(username.toLowerCase());
-      const userId = user?.id;
-
-      if (userId) {
-        const link = `<a href="/profile/${userId}" style="color:cyan;text-decoration:underline;opacity:1;transition:opacity 0.3s;" onmouseover="this.style.opacity='0.7';" onmouseout="this.style.opacity='1';">@${username}</a>`;
-            parsedContent = parsedContent.replace(`@${username}`, link);
-      }
-    }
-
-    return parsedContent;
-  };
-
-  const renderContent = async (content) => {
-    const parsedContent = await parseContent(content);
-    return { __html: parsedContent };
-  };
-  
-  
   return (
     <article
       className={`flex w-full flex-col rounded-xl  ${
@@ -104,7 +78,7 @@ const ThreadCard = async ({
               </h4>
               <p className="text-gray-1 text-small-medium">@{author.username}</p>
             </Link>
-
+            {/*Ignore ts warning */}
             <Content content={content} />
 
             <div className={`mt-5 flex flex-col gap-3 ${isComment && "mb-1"}`}>
