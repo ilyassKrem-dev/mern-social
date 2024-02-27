@@ -4,9 +4,7 @@ import { IoMdSettings } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { useRouter } from "next/navigation";
-import { DeleteUser } from "@/lib/actions/user.action";
-import { clerkClient } from "@clerk/nextjs";
-import { AnyAaaaRecord } from "dns";
+
 
 export default function Settings({authUserId}:{authUserId:string}) {
     const [show,setShow] = useState<boolean>(false)
@@ -73,13 +71,18 @@ export default function Settings({authUserId}:{authUserId:string}) {
           headers:{
             'Content-Type':'application/json'
           },
-          body:JSON.stringify({authUserId})
+          body:JSON.stringify({
+            eventType:"user.deleted",
+            data:{
+              userId:authUserId
+            }
+          })
         })
         if(!response.ok) {
           throw new Error('Failed to delete account')
         }
         const resonseData = await response.json()
-        console.log('Response: '+resonseData)
+        console.log('Response: ', resonseData)
         router.push('/')
       } catch (error:any) {
         throw new Error(`Failed to delete: ${error.message}`)
