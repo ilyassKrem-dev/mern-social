@@ -3,6 +3,7 @@ import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import { profileTabs } from "@/assets/tabs-info/Profiletabs";
+
 export default async function Page({ params }: { params: { id: string } }) {
 
   const userInfo = await fetchUser(params.id);

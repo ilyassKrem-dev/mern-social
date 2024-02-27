@@ -247,3 +247,24 @@ export async function fetchSuggestedUsers() {
         throw new Error(`Failed to fetch seggested users: ${error.message}`)
     }
 }
+export async function DeleteUser(userId:string) {
+    try {
+        const user = User.findOne({id:userId})
+        console.log(user)
+    } catch (error:any) {
+        throw new Error(`Failed to delete account: ${error.message}`)
+    }
+
+}
+
+export async function fetchUserByUsername(username:string) {
+    try {
+        connectDB()
+        const user = await User.findOne({username:username})
+        
+        return user
+    } catch (error:any) {
+        throw new Error(`Failed to find id: ${error.message}`)
+    }
+
+}

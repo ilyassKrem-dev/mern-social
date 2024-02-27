@@ -6,6 +6,8 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { formatDateString } from "@/lib/utils";
 import LikeButton from "@/assets/other/LikeButton";
 import DeleteThread from "@/assets/other/DeleteThread";
+import { fetchUserByUsername } from "@/lib/actions/user.action";
+import Content from "@/assets/other/content";
 interface Props {
   id: string;
   currentUserId: string;
@@ -33,7 +35,7 @@ interface Props {
   isComment?: boolean;
 }
 
-const ThreadCard =  ({
+const ThreadCard = async ({
   id,
   currentUserId,
   checkLike,
@@ -46,10 +48,32 @@ const ThreadCard =  ({
   comments,
   isComment,
 }: Props) => {
-  const mentionRegex = /@(\w+)/g;
-  const processedContent = content.replace(mentionRegex, (match, username) => (
-    `<a href="/profile/${author.id}" style="color:cyan;text-decoration:underline;">@${username}</a>`
-  ));
+  
+
+  const parseContent = async (content) => {
+    const regex = /@(\w+)/g;
+    let parsedContent = content;
+    let match;
+
+    while ((match = regex.exec(content)) !== null) {
+      const username = match[1];
+      const user = await fetchUserByUsername(username.toLowerCase());
+      const userId = user?.id;
+
+      if (userId) {
+        const link = `<a href="/profile/${userId}" style="color:cyan;text-decoration:underline;opacity:1;transition:opacity 0.3s;" onmouseover="this.style.opacity='0.7';" onmouseout="this.style.opacity='1';">@${username}</a>`;
+            parsedContent = parsedContent.replace(`@${username}`, link);
+      }
+    }
+
+    return parsedContent;
+  };
+
+  const renderContent = async (content) => {
+    const parsedContent = await parseContent(content);
+    return { __html: parsedContent };
+  };
+  
   
   return (
     <article
@@ -81,7 +105,7 @@ const ThreadCard =  ({
               <p className="text-gray-1 text-small-medium">@{author.username}</p>
             </Link>
 
-            <p className="mt-2 text-small-regular text-light-2" dangerouslySetInnerHTML={{ __html: processedContent }}/>
+            <Content content={content} />
 
             <div className={`mt-5 flex flex-col gap-3 ${isComment && "mb-1"}`}>
               <div className="flex gap-3.5">

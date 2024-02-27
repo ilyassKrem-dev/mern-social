@@ -1,9 +1,10 @@
 "use client"
-import { usePathname , useRouter} from "next/navigation";
+import {usePathname , useRouter} from "next/navigation";
 
 import { MdDelete  } from "react-icons/md";
 import { deleteThread } from "@/lib/actions/thread.action";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 interface Props {
     threadId:string
     author:string;
@@ -19,10 +20,13 @@ export default function DeleteThread({
     parentId,
     isComment
 }:Props) {
+    
     const [show,setShow] = useState<boolean>(false)
     const pathname = usePathname()
     const router = useRouter()
-    if(currentUserId !== author || pathname==="/") return null
+    const {userId} = useAuth()
+    if(!userId) return null
+    if(author !== userId || pathname==="/") return null
     const handleDelete = async() => {
         await deleteThread(threadId,pathname)
         if(!parentId || !isComment) {

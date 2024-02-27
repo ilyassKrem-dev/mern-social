@@ -42,7 +42,7 @@ export default function ProfileHeader({
                         <p className=" text-base-medium text-gray-1">@{username}</p>
                     </div>
                 </div>
-                <Settings />
+                {authUserId&&<Settings />}
             </div>
             {/*Community*/ } 
             <p className="mt-6 max-w-lg text-base-regular text-light-2">{bio}</p>
