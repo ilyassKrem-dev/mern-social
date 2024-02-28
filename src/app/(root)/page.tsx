@@ -2,13 +2,14 @@
 import ThreadCard from "@/components/cards/ThreadCard";
 import { fetchPosts,threadLikedByUser } from "@/lib/actions/thread.action";
 import { currentUser } from "@clerk/nextjs";
-import { fetchSuggestedCommuntity } from "@/lib/actions/community.actions";
+
 export default async function Home() {
   const results = await fetchPosts(1,30);
   const user = await currentUser()
   const checkLike = async (threadId:string) => {
     try {
-      if(user) return await threadLikedByUser(threadId,user?.id)
+      if(!user) return false
+      return await threadLikedByUser(threadId,user?.id)
     } catch (error:any) {
         throw new Error(`Failed checking: ${error.message}`)
     }

@@ -4,10 +4,11 @@ import { IoMdSettings } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { useRouter } from "next/navigation";
-
+import { useClerk } from "@clerk/nextjs";
 
 export default function Settings({authUserId}:{authUserId:string}) {
     const [show,setShow] = useState<boolean>(false)
+    const { signOut } = useClerk();
     const router = useRouter()
     useEffect(() => {
         function handleOutsideClick(event: any) {
@@ -63,30 +64,27 @@ export default function Settings({authUserId}:{authUserId:string}) {
           window.removeEventListener('resize', handleWindowResize);
         };
       }, [show]);
-      
+    
     const handleDelete = async () => {
       try {
-        const response = await fetch('https://mern-social-beta.vercel.app/api/webhook/clerk',{
-          method:"POST",
-          headers:{
-            'Content-Type':'application/json'
+        signOut();
+        const response = await fetch('/api/private', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
           },
-          body:JSON.stringify({
-            eventType:"user.deleted",
-            data:{
-              userId:authUserId
-            }
-          })
-        })
-        if(!response.ok) {
-          throw new Error('Failed to delete account')
+          body: JSON.stringify({ userId:authUserId }),
+        });
+        if (response.ok) {
+          console.log('Deleted');
+        } else {
+          // Handle error
+          const responseData = await response.json();
+          console.error('Failed to delete user:', responseData.error);
         }
-        const responseData = await response.json()
-        console.log('Response: ', responseData)
-        router.push('/')
-      } catch (error:any) {
-        throw new Error(`Failed response: ${error.message}`)
-      } 
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
     }
     
     return (

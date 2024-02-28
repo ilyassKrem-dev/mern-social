@@ -26,8 +26,7 @@ type EventType =
   | "organizationMembership.created"
   | "organizationMembership.deleted"
   | "organization.updated"
-  | "organization.deleted"
-  | "user.deleted";
+  | "organization.deleted";
 
 type Event = {
   data: Record<string, string | number | Record<string, string>[]>;
@@ -207,24 +206,5 @@ export const POST = async (request: Request) => {
       );
     }
   }
-  if(eventType === "user.deleted") {
-    try {
-      const { userId} = evnt?.data;
-      console.log("deleted", evnt?.data);
-      const stringUserId = typeof userId === 'string' ? userId : String(userId)
-      await DeleteUser(stringUserId)
-
-      return NextResponse.json(
-        {message:"User deleted"},
-        {status:201}
-      )
-    } catch (err) {
-      console.log(err)
-
-      return NextResponse.json(
-        { message: "Internal Server Error" },
-        { status: 500 }
-      ); 
-    }
-  }
+  
 };

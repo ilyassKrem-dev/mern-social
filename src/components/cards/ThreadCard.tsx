@@ -6,7 +6,6 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { formatDateString } from "@/lib/utils";
 import LikeButton from "@/assets/other/LikeButton";
 import DeleteThread from "@/assets/other/DeleteThread";
-import { fetchUserByUsername } from "@/lib/actions/user.action";
 import Content from "@/assets/other/content";
 interface Props {
   id: string;

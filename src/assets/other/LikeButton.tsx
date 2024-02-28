@@ -21,7 +21,7 @@ export default function LikeButton({id,userId,checkLike}:{id:string,userId:strin
    
     return (
         <> 
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
                 {checkLike ? (
                     <motion.div
                     animate={{ scale: previousLiked ? 1.1 : 1 }} 

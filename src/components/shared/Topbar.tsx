@@ -4,6 +4,7 @@ import { OrganizationSwitcher, SignedIn, SignOutButton } from "@clerk/nextjs"
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { dark } from "@clerk/themes";
 
+
 export default function Topbar() {
 
     return (
@@ -30,6 +31,7 @@ export default function Topbar() {
                         </SignOutButton>
                     </SignedIn>
                 </div>
+                
                 <OrganizationSwitcher
                 appearance={{
                     baseTheme: dark,
