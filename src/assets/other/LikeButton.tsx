@@ -3,17 +3,14 @@
 import { RiHeartLine,RiHeartFill  } from "react-icons/ri"
 import { likeThread } from "@/lib/actions/thread.action"
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { motion,AnimatePresence } from "framer-motion";
 
 export default function LikeButton({id,userId,checkLike}:{id:string,userId:string,checkLike:boolean| undefined}) {
    
-    const [previousLiked, setPreviousLiked] = useState<boolean| undefined>(false);
+    const [previousLiked, setPreviousLiked] = useState<boolean | undefined>(checkLike);
     const pathname = usePathname()
     
-    useEffect(() => {
-        setPreviousLiked(checkLike);
-    }, [checkLike]);
     const handleClick= async ()  => {
         if(!userId) return
         await likeThread(id,userId,pathname)
@@ -21,9 +18,10 @@ export default function LikeButton({id,userId,checkLike}:{id:string,userId:strin
    
     return (
         <> 
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="wait">
                 {checkLike ? (
                     <motion.div
+                    whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}
                     animate={{ scale: previousLiked ? 1.1 : 1 }} 
                     transition={{ duration: 0.2 }}
                     >
@@ -34,7 +32,8 @@ export default function LikeButton({id,userId,checkLike}:{id:string,userId:strin
                     </motion.div>
                 ) : (
                     <motion.div
-                    animate={{ scale: previousLiked ? 1.1 : 1 }} 
+                    animate={{ scale: previousLiked ? 1.1 : 1 }}
+                    whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.8 }}
                     transition={{ duration: 0.2 }}
                     >
                     <RiHeartLine

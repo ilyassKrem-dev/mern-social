@@ -2,9 +2,11 @@
 import ThreadCard from "@/components/cards/ThreadCard";
 import { fetchPosts,threadLikedByUser } from "@/lib/actions/thread.action";
 import { currentUser } from "@clerk/nextjs";
-
-export default async function Home() {
-  const results = await fetchPosts(1,30);
+import Pagination from "@/components/shared/Pagination";
+export default async function Home({
+  searchParams,
+}:{searchParams:{[key:string]:string|undefined}}) {
+  const results = await fetchPosts(searchParams.page? +searchParams : 1,10);
   const user = await currentUser()
   const checkLike = async (threadId:string) => {
     try {
@@ -47,6 +49,11 @@ export default async function Home() {
               </>
             )}
         </section>
+        <Pagination 
+          path="/"
+          isNext={results.isNext}
+          pageNumber={searchParams?.page ? +searchParams.page:1}
+        />
     </div>
   ) 
 }

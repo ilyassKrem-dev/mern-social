@@ -55,6 +55,7 @@ function CommunityCard({ id, name, username, imgUrl, bio, members,suggest }: Pro
                 alt={`user_${index}`}
                 width={28}
                 height={28}
+                loading="lazy"
                 className={`${
                   index !== 0 && "-ml-2"
                 } rounded-full object-cover w-auto h-auto`}

@@ -34,6 +34,7 @@ export default function ContentImages({images}:{images:string[]}) {
                 return (
                     <div className="w-[100px] sm:w-[150px] max-[300px]:w-[60px]" key={index}>
                         <Image src={image} alt={`image ${index}`} width={200} height={200} className="w-full h-full object-cover rounded-xl cursor-pointer hover:opacity-50 transition-all duration-200"
+                        loading="lazy"
                         onClick={() => handleClick(image)}/>
                     </div>
                 )
@@ -54,6 +55,7 @@ export default function ContentImages({images}:{images:string[]}) {
                                     width={200} 
                                     height={200} 
                                     className="w-full h-full object-cover cursor-pointer hover:opacity-50 transition-all duration-200 rounded-xl"
+                                    loading="lazy"
                                     onClick={() => setEnlargedImage(image)}
                                 />
                             </div>
