@@ -36,7 +36,7 @@ export default function LeftSidebar() {
                     </SignOutButton>
                 </SignedIn>
                 <SignedOut>
-                    <SignInButton mode="redirect" redirectUrl={'/sign-in'}>
+                    <SignInButton >
                             <div className=" cursor-pointer flex gap-4 p-4 items-center group">
                                 <RiLoginBoxLine className="text-white text-heading2-semibold group-hover:text-accent transition-all duration-300"/>
                                 <p className="text-light-2 max-lg:hidden group-hover:text-accent transition-all duration-300 cursor-pointer">Login</p>

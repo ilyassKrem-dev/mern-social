@@ -4,13 +4,15 @@ import { redirect } from "next/navigation"
 import ThreadCard from "../cards/ThreadCard"
 import { threadLikedByUser } from "@/lib/actions/thread.action"
 interface Props{
-    currentUserId:string;
+    userId?:string;
+    currentUserId:string|undefined;
     accountId:string;
     accountType:string;
     tabType?:string;
 }
 
 const ThreadsTab = async ({
+    userId,
     currentUserId,
     accountId,
     accountType,
@@ -34,6 +36,7 @@ const ThreadsTab = async ({
     if(!result) redirect('/')
     const checkLike = async (threadId:string) => {
         try {
+           if(!currentUserId) return
            return await threadLikedByUser(threadId,currentUserId)
         } catch (error:any) {
             throw new Error(`Failed checking: ${error.message}`)
@@ -53,7 +56,7 @@ const ThreadsTab = async ({
                     likes={thread.likedBy.length}
                     currentUserId={currentUserId|| ""}
                     parentId={thread.parentId}
-                    content={thread.text}
+                    content={thread.content}
                     author={
                         accountType === "User"&&tabType=="tagged" || tabType=="likes"
                         ?

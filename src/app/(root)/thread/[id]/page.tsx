@@ -39,7 +39,7 @@ const Page =  async ({params}:{params:{id:string}}) => {
                     likes={thread.likedBy.length}
                     currentUserId={user?.id || ""}
                     parentId={thread.parentId}
-                    content={thread.text}
+                    content={thread.content}
                     author={thread.author}
                     community={thread.community}
                     createdAt={thread.createdAt}
@@ -63,7 +63,7 @@ const Page =  async ({params}:{params:{id:string}}) => {
                             likes={childItem.likedBy.length}
                             currentUserId={user?.id || ""}
                             parentId={childItem.parentId}
-                            content={childItem.text}
+                            content={childItem.content}
                             author={childItem.author}
                             community={childItem.community}
                             createdAt={childItem.createdAt}

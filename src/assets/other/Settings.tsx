@@ -1,14 +1,11 @@
 "use client"
 import { useEffect, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
-import { MdDeleteForever } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { useRouter } from "next/navigation";
-import { useClerk } from "@clerk/nextjs";
-
+import DeleteAccount from "./DeleteAccount";
 export default function Settings({authUserId}:{authUserId:string}) {
     const [show,setShow] = useState<boolean>(false)
-    const { signOut } = useClerk();
     const router = useRouter()
     useEffect(() => {
         function handleOutsideClick(event: any) {
@@ -65,27 +62,6 @@ export default function Settings({authUserId}:{authUserId:string}) {
         };
       }, [show]);
     
-    const handleDelete = async () => {
-      try {
-        signOut();
-        const response = await fetch('/api/private', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ userId:authUserId }),
-        });
-        if (response.ok) {
-          console.log('Deleted');
-        } else {
-          // Handle error
-          const responseData = await response.json();
-          console.error('Failed to delete user:', responseData.error);
-        }
-      } catch (error) {
-        console.error('Error deleting user:', error);
-      }
-    }
     
     return (
         <div className="relative">
@@ -97,10 +73,7 @@ export default function Settings({authUserId}:{authUserId:string}) {
                         <CiEdit />
                         <p className=" cursor-pointer">Edit profile</p>
                     </div>
-                    <div className="text-accent cursor-pointer hover:opacity-60 transition-all duration-300 flex  items-center gap-x-4" onClick={handleDelete}>
-                        <MdDeleteForever />  
-                        <p className=" cursor-pointer">Delete account</p>
-                    </div>
+                    <DeleteAccount authUserId={authUserId} />
                     <button className="text-white cursor-pointer hover:opacity-60 transition-all duration-300 sm:hidden border rounded-full border-white p-2" onClick={() => setShow(false)}>
                         Cancel
                     </button>

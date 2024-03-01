@@ -50,12 +50,13 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 
 interface Params {
   text: string,
+  images:string[];
   author: string,
   communityId: string | null,
   path: string,
 }
 
-export async function createThread({ text, author, communityId, path }: Params
+export async function createThread({ text,images, author, communityId, path }: Params
 ) {
   try {
     connectDB();
@@ -64,9 +65,9 @@ export async function createThread({ text, author, communityId, path }: Params
       { id: communityId },
       { _id: 1 }
     );
-
+      
     const createdThread = await Thread.create({
-      text,
+      content:{text,images},
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
     });
@@ -203,6 +204,7 @@ export async function fetchThreadById(threadId: string) {
 export async function addCommentToThread(
   threadId: string,
   commentText: string,
+  images:string[],
   userId: string,
   path: string
 ) {
@@ -218,7 +220,7 @@ export async function addCommentToThread(
 
     // Create the new comment thread
     const commentThread = new Thread({
-      text: commentText,
+      content:{text:commentText,images},
       author: userId,
       parentId: threadId, // Set the parentId to the original thread's ID
     });
@@ -267,8 +269,9 @@ export async function likeThread(threadId:string,userId:string,path:string) {
     }
 }
 
-export async function threadLikedByUser(threadId:string,userId:string) {
+export async function threadLikedByUser(threadId:string,userId:string|undefined) {
     try {
+      if(!userId) return
       connectDB()
       const user = await User.findOne({id:userId})
       const thread = await Thread.findById(threadId)

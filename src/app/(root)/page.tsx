@@ -16,7 +16,7 @@ export default async function Home() {
   }
   const checkLikePromises = results.posts.map((post) => checkLike(post._id));
   const likes = await Promise.all(checkLikePromises);
-
+  
   
   return (
     <div >
@@ -27,6 +27,7 @@ export default async function Home() {
             ): (
               <>
                 {results.posts.map((post,index) => {
+                 
                   
                   return (
                     <ThreadCard 
@@ -36,7 +37,7 @@ export default async function Home() {
                       likes={post.likedBy.length}
                       currentUserId={user?.id || ""}
                       parentId={post.parentId}
-                      content={post.text}
+                      content={post.content}
                       author={post.author}
                       community={post.community}
                       createdAt={post.createdAt}

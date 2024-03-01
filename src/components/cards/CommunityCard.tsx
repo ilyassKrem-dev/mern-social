@@ -24,6 +24,7 @@ function CommunityCard({ id, name, username, imgUrl, bio, members,suggest }: Pro
             src={imgUrl}
             alt='community_logo'
             fill
+            sizes="(max-width: 600px) 100vw, 50vw"
             className='rounded-full object-cover'
           />
         </Link>
@@ -56,7 +57,7 @@ function CommunityCard({ id, name, username, imgUrl, bio, members,suggest }: Pro
                 height={28}
                 className={`${
                   index !== 0 && "-ml-2"
-                } rounded-full object-cover`}
+                } rounded-full object-cover w-auto h-auto`}
               />
             ))}
             {members.length > 3 && (

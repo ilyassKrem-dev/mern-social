@@ -32,6 +32,7 @@ export default function ProfileHeader({
                         src={imgUrl} 
                         alt="Profile image"
                         fill
+                        priority
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 640px, 960px"
                         className="rounded-full object-cover shadow-xl" />
                     </div>

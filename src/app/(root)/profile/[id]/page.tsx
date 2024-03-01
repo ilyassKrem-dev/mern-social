@@ -3,11 +3,11 @@ import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import { profileTabs } from "@/assets/tabs-info/Profiletabs";
-
+import { currentUser } from "@clerk/nextjs";
 export default async function Page({ params }: { params: { id: string } }) {
-
-  const userInfo = await fetchUser(params.id);
   
+  const userInfo = await fetchUser(params.id);
+  const user = await currentUser()
   
   
   return (
@@ -49,7 +49,8 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 {/*typeScript warning ignore */}
                 <ThreadsTab
-                  currentUserId={params.id}
+                  userId={params.id}
+                  currentUserId={user?.id}
                   accountId={userInfo.id}
                   accountType= "User"
                   tabType={tab.value}

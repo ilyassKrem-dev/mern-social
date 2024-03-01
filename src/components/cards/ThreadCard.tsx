@@ -7,13 +7,17 @@ import { formatDateString } from "@/lib/utils";
 import LikeButton from "@/assets/other/LikeButton";
 import DeleteThread from "@/assets/other/DeleteThread";
 import Content from "@/assets/other/content";
+import ContentImages from "@/assets/other/ContentImages";
 interface Props {
   id: string;
   currentUserId: string;
   checkLike:boolean | undefined;
   likes:number;
   parentId: string | null;
-  content: string;
+  content: {
+    text:string;
+    images:string[];
+  };
   author: {
     name: string;
     image: string;
@@ -79,7 +83,7 @@ const ThreadCard =  ({
             </Link>
             {/*Ignore ts warning */}
             <Content content={content} />
-
+            <ContentImages images={content?.images || []}/>
             <div className={`mt-5 flex flex-col gap-3 ${isComment && "mb-1"}`}>
               <div className="flex gap-3.5">
                 <div className="flex flex-col gap-1 items-center">
@@ -119,7 +123,7 @@ const ThreadCard =  ({
         </div>
         <DeleteThread 
         threadId={id.toString()}
-        currentUserId={currentUserId}
+        
         author={author.id}
         parentId={parentId}
         isComment={isComment}/>

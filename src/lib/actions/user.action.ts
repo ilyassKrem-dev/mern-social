@@ -167,7 +167,7 @@ export async function getTaggedPosts(userId:string) {
         connectDB()
         const user = await User.findOne({id:userId})
         const threads = await Thread.find({
-            text: { $regex: `@${user.username}` },
+            "content.text": { $regex: `@${user.username}` },
             author: { $ne: user._id } 
         })
         .populate({
