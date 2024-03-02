@@ -1,12 +1,17 @@
-import { fetchUser } from "@/lib/actions/user.action";
+import { fetchUserByUsername } from "@/lib/actions/user.action";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import { profileTabs } from "@/assets/tabs-info/Profiletabs";
 import { currentUser } from "@clerk/nextjs";
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { username: string } }) {
   
-  const userInfo = await fetchUser(params.id);
+  const userInfo = await fetchUserByUsername(params.username);
+  if(!userInfo) {
+    return (
+      <p className=" text-gray-1 text-heading3-bold text-center">User not found</p>
+    )
+  }
   const user = await currentUser()
   
   
@@ -49,7 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               >
                 {/*typeScript warning ignore */}
                 <ThreadsTab
-                  userId={params.id}
+                  userId={userInfo.id}
                   currentUserId={user?.id}
                   accountId={userInfo.id}
                   accountType= "User"

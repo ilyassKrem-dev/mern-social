@@ -1,4 +1,4 @@
-import mongoose, { ConnectOptions } from "mongoose";
+import mongoose from "mongoose";
 
 let isConnected = false;
 
@@ -10,13 +10,9 @@ export   const connectDB = async () => {
     if(isConnected) return 
 
     try {
-        const options: ConnectOptions = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            // Add any other options you need
-        } as any;
+        
 
-        await mongoose.connect(process.env.MONGODB_URL,options)
+        await mongoose.connect(process.env.MONGODB_URL)
         const connection = mongoose.connection;
 
         // Set the connection pool size

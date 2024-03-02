@@ -34,6 +34,7 @@ const ThreadsTab = async ({
         
     }
     if(!result) redirect('/')
+    
     const checkLike = async (threadId:string) => {
         try {
            if(!currentUserId) return
@@ -66,7 +67,7 @@ const ThreadsTab = async ({
                         ? 
                         {name:result.name,image:result.image,id:result.id,username:result.username}
                         :
-                        {name:thread.author.name,image:thread.author.image,id:thread.author.id}
+                        {name:thread.author.name,image:thread.author.image,id:thread.author.id,username:thread.author.username}
                     } 
                     community={thread.community}
                     createdAt={thread.createdAt}

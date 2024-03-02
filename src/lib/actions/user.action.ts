@@ -47,12 +47,15 @@ export async function updateUser({
 export async function fetchUser(userId:string) {
     try {
         connectDB()
+        
+        
         return User
             .findOne({id:userId})
             .populate({
                 path:'communities',
                 model: Community
             })
+
     } catch (error:any) {
         throw new Error(`Failed to fetch user: ${error.message}`)
     }
@@ -251,11 +254,17 @@ export async function fetchSuggestedUsers() {
 export async function fetchUserByUsername(username:string) {
     try {
         connectDB()
-        const user = await User.findOne({username:username})
         
-        return user
+        
+        return User
+            .findOne({username:username})
+            .populate({
+                path:'communities',
+                model: Community
+            })
+
     } catch (error:any) {
-        throw new Error(`Failed to find id: ${error.message}`)
+        throw new Error(`Failed to fetch user: ${error.message}`)
     }
 
 }

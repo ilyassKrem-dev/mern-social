@@ -11,12 +11,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const communityDetails = await fetchCommunityDetails(params.id)
 
-  const threadsTabContent1 = await ThreadsTab({
-    currentUserId: user.id,
-    accountId: communityDetails._id,
-    accountType: "Community",
-  });
-  const threadsTabContent3 = await ThreadsTab({
+  const threadsTabContent = await ThreadsTab({
     currentUserId: user.id,
     accountId: communityDetails._id,
     accountType: "Community",
@@ -54,7 +49,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             value="threads"
             className="w-full text-light-1"
             >
-            {threadsTabContent1}
+            {threadsTabContent}
             </TabsContent>
             <TabsContent
             value="members"
@@ -79,7 +74,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             value="requests"
             className="w-full text-light-1"
             >
-            {threadsTabContent3}
+            
             </TabsContent>
            
         </Tabs>

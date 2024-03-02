@@ -36,7 +36,7 @@ const UserCard = ({
             </div>
         </div>
         
-        <Link href={`/profile/${id}`}>
+        <Link href={`/profile/${username}`}>
             <Button className="user-card_btn" >
                 View
             </Button>

@@ -34,7 +34,7 @@ export default  function  RightSidebar() {
             <div className="flex flex-1 flex-col justify-start gap-3">
                 <h3 className=" text-heading4-medium text-light-1">Suggested Communities</h3>
                 <div className="flex flex-col gap-y-6 mt-5">
-                    {communitiesResults.map(community => {
+                    {communitiesResults&&communitiesResults.map(community => {
                         return (
                             <CommunityCard
                             key={community.id}

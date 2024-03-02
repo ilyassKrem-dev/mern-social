@@ -6,7 +6,6 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { formatDateString } from "@/lib/utils";
 import LikeButton from "@/assets/other/LikeButton";
 import DeleteThread from "@/assets/other/DeleteThread";
-import Content from "@/assets/other/content";
 import ContentImages from "@/assets/other/ContentImages";
 interface Props {
   id: string;
@@ -51,7 +50,11 @@ const ThreadCard =  ({
   comments,
   isComment,
 }: Props) => {
-
+  const mentionRegex = /@(\w+)/g;
+  const changedMention = content.text.replace(mentionRegex, (match, username) => (
+    `<a href="/profile/${username}" style="color:cyan;text-decoration:underline;opacity:1;transition:opacity 0.3s;" onmouseover="this.style.opacity='0.7';" onmouseout="this.style.opacity='1';">@${username}</a>`
+  ));
+  
   return (
     <article
       className={`flex w-full flex-col rounded-xl  ${
@@ -61,7 +64,7 @@ const ThreadCard =  ({
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
-            <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
+            <Link href={`/profile/${author.username}`} className="relative h-11 w-11">
               <Image
                 src={author.image}
                 alt="Profile image"
@@ -75,14 +78,14 @@ const ThreadCard =  ({
           </div>
 
           <div className="w-full flex flex-col">
-            <Link href={`/profile/${author.id}`} className="w-fit">
+            <Link href={`/profile/${author.username}`} className="w-fit">
               <h4 className=" cursor-pointer text-base-semibold text-light-1">
                 {author.name}
               </h4>
               <p className="text-gray-1 text-small-medium">@{author.username}</p>
             </Link>
             {/*Ignore ts warning */}
-            <Content content={content} />
+            <div className="mt-2 text-small-regular text-light-2" dangerouslySetInnerHTML={{ __html: changedMention }} />
             <ContentImages images={content?.images || []}/>
             <div className={`mt-5 flex flex-col gap-3 ${isComment && "mb-1"}`}>
               <div className="flex gap-3.5">
