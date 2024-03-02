@@ -1,10 +1,14 @@
 import { fetchUserByUsername } from "@/lib/actions/user.action";
-import ProfileHeader from "@/components/shared/ProfileHeader";
+
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
-import ThreadsTab from "@/components/shared/ThreadsTab";
+
 import { profileTabs } from "@/assets/tabs-info/Profiletabs";
 import { currentUser } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
 export default async function Page({ params }: { params: { username: string } }) {
+
+  const ProfileHeader = dynamic(() => import("@/components/shared/ProfileHeader"));
+  const ThreadsTab = dynamic(() => import("@/components/shared/ThreadsTab"));
   
   const userInfo = await fetchUserByUsername(params.username);
   if(!userInfo) {
@@ -13,7 +17,7 @@ export default async function Page({ params }: { params: { username: string } })
     )
   }
   const user = await currentUser()
-  
+
   
   return (
     <section>
@@ -47,6 +51,7 @@ export default async function Page({ params }: { params: { username: string } })
             
             
             return (
+              
               <TabsContent
                 key={`content-${tab.label}`}
                 value={tab.value}
