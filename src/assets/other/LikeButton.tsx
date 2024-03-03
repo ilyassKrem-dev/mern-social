@@ -6,12 +6,13 @@ import { usePathname } from "next/navigation"
 import {  useState } from "react";
 import { motion,AnimatePresence } from "framer-motion";
 
-export default function LikeButton({id,userId,checkLike}:{id:string,userId:string,checkLike:boolean| undefined}) {
+export default function LikeButton({id,userId,checkLike,share}:{id:string,userId:string,checkLike:boolean| undefined,share?:boolean}) {
    
     const [previousLiked, setPreviousLiked] = useState<boolean | undefined>(checkLike);
     const pathname = usePathname()
     
     const handleClick= async ()  => {
+        if(share) return
         if(!userId) return
         await likeThread(id,userId,pathname)
     }

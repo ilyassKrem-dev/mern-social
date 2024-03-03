@@ -10,14 +10,8 @@ export   const connectDB = async () => {
     if(isConnected) return 
 
     try {
-        
-
+ 
         await mongoose.connect(process.env.MONGODB_URL)
-        const connection = mongoose.connection;
-
-        // Set the connection pool size
-        connection.setMaxListeners(10);
-        
         isConnected = true
         console.log("Connect to MongoDB")
         

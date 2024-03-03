@@ -47,7 +47,9 @@ const ThreadsTab = async ({
       const likes = await Promise.all(checkLikePromises);
     return (
         <section className="mt-9 flex flex-col gap-10">
-            {result.threads.map((thread:any,index:any) => {
+            {accountType === "User" 
+            ?
+            result.threads.map((thread:any,index:any) => {
                 
                 return (
                     <ThreadCard 
@@ -59,14 +61,32 @@ const ThreadsTab = async ({
                     parentId={thread.parentId}
                     content={thread.content}
                     author={
-                        accountType === "User"&&tabType=="tagged" || tabType=="likes"
+                        tabType=="tagged" || tabType=="likes"
                         ?
                         {name:thread.author.name,image:thread.author.image,id:thread.author.id,username:thread.author.username}
                         :
-                        accountType === "User"
-                        ? 
                         {name:result.name,image:result.image,id:result.id,username:result.username}
-                        :
+                        
+                    } 
+                    community={thread.community}
+                    createdAt={thread.createdAt}
+                    comments={thread.children}
+                    />
+                )
+            })
+            :
+            result.threads.map((thread:any,index:any) => {
+                
+                return (
+                    <ThreadCard 
+                    key={thread._id} 
+                    id={thread._id}
+                    checkLike={likes[index]}
+                    likes={thread.likedBy.length}
+                    currentUserId={currentUserId|| ""}
+                    parentId={thread.parentId}
+                    content={thread.content}
+                    author={
                         {name:thread.author.name,image:thread.author.image,id:thread.author.id,username:thread.author.username}
                     } 
                     community={thread.community}

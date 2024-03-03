@@ -5,17 +5,20 @@ import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import UserCard from "@/components/cards/UserCard";
+
 export default async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
   if (!user) return null;
 
   const communityDetails = await fetchCommunityDetails(params.id)
-
+  
   const threadsTabContent = await ThreadsTab({
     currentUserId: user.id,
     accountId: communityDetails._id,
     accountType: "Community",
   });
+  const commuInv = ""
+  console.log(commuInv)
   return (
     <section>
       <ProfileHeader
@@ -69,14 +72,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         )
                     })}
                 </section>
-            </TabsContent>
-            <TabsContent
-            value="requests"
-            className="w-full text-light-1"
-            >
-            
-            </TabsContent>
-           
+            </TabsContent>        
         </Tabs>
       </div>
     </section>

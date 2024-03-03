@@ -7,6 +7,7 @@ import { formatDateString } from "@/lib/utils";
 import LikeButton from "@/assets/other/LikeButton";
 import DeleteThread from "@/assets/other/DeleteThread";
 import ContentImages from "@/assets/other/ContentImages";
+import ShareThread from "../shared/ShareThread";
 interface Props {
   id: string;
   currentUserId: string;
@@ -117,7 +118,10 @@ const ThreadCard =  ({
                   </p>}
                 </div>
                 <RiReplyLine className=" text-gray-600 text-heading3-bold cursor-pointer rotate-180 hover:text-green-500 transition-all duration-300" />
-                <RiShareLine className=" text-gray-600 text-heading3-bold cursor-pointer hover:text-purple-500 transition-all duration-300" />
+                <ShareThread 
+                  threadId={id.toString()}
+    
+                 />
               </div>
               
               
