@@ -37,7 +37,7 @@ const UserCard = ({
         </div>
         
         <Link href={`/profile/${username}`}>
-            <Button className="user-card_btn" >
+            <Button className="user-card_btn hover:opacity-50 transition-all duration-200" >
                 View
             </Button>
         </Link>

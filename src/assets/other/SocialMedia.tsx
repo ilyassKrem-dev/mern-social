@@ -1,5 +1,5 @@
 
-import {FacebookShareButton,FacebookIcon,WhatsappShareButton,WhatsappIcon,TwitterShareButton,TwitterIcon,LinkedinShareButton,LinkedinIcon} from "react-share"
+import {FacebookShareButton,FacebookIcon,WhatsappShareButton,WhatsappIcon,TwitterShareButton,TwitterIcon,LinkedinShareButton,LinkedinIcon,XIcon} from "react-share"
 
 export default function SocialMedia({url}:{url:string}) {
 
@@ -18,7 +18,7 @@ export default function SocialMedia({url}:{url:string}) {
             </div>  
             <div className="hover:opacity-55">
                 <TwitterShareButton url={url}>
-                    <TwitterIcon round size={40} />
+                    <XIcon round size={40} />
                 </TwitterShareButton>
             </div> 
             <div className="hover:opacity-55">
