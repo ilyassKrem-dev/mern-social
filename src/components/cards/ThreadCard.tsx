@@ -1,7 +1,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import {RiReplyLine, RiShareLine } from "react-icons/ri";
 import { FaRegCommentDots } from "react-icons/fa";
 import { formatDateString } from "@/lib/utils";
 import LikeButton from "@/assets/other/LikeButton";
@@ -117,7 +116,7 @@ const ThreadCard =  ({
                     : comments.length}
                   </p>}
                 </div>
-                <RiReplyLine className=" text-gray-600 text-heading3-bold cursor-pointer rotate-180 hover:text-green-500 transition-all duration-300" />
+              
                 <ShareThread 
                   threadId={id.toString()}
     
